@@ -1,9 +1,12 @@
 import java.util.logging.LogManager;
-import com.fazecast.jSerialComm.*
+
 import org.jnativehook.GlobalScreen;
 import org.jnativehook.NativeHookException;
 import org.jnativehook.mouse.NativeMouseEvent;
 import org.jnativehook.mouse.NativeMouseInputListener;
+
+import com.fazecast.jSerialComm.SerialPort;
+
 
 public class Main implements NativeMouseInputListener {
 	public void nativeMouseClicked(NativeMouseEvent e) {
@@ -12,6 +15,7 @@ public class Main implements NativeMouseInputListener {
 
 	public void nativeMousePressed(NativeMouseEvent e) {
 		sendByte((byte) 97);
+		System.out.println("Mouse Clicked: " + e.getClickCount());
 	}
 
 	public void nativeMouseReleased(NativeMouseEvent e) {
@@ -25,6 +29,36 @@ public class Main implements NativeMouseInputListener {
 	public void nativeMouseDragged(NativeMouseEvent e) {
 		System.out.println("Mouse Dragged: " + e.getX() + ", " + e.getY());
 	}
+
+	SerialPort serialPort;
+	boolean portFound = false;
+
+	void sendByte(byte b) {
+		byte[] buff = new byte[1];
+		buff[0] = b;
+		serialPort.writeBytes(buff, 1);
+	}
+
+	  void startSerial() {
+
+		    if (!portFound || serialPort != null) {
+		      return;
+		    }
+
+		    // ポート名
+		    String portName = "COM6";
+
+		    for (SerialPort sp : SerialPort.getCommPorts()) {
+		      if (sp.getSystemPortName().equals(portName)) {
+		        serialPort = sp;
+		        break;
+		      }
+		    }
+		    // ボーレート
+		    serialPort.setBaudRate(9600);
+	  }
+
+
 
 	public static void main(String[] args) {
 		try {
