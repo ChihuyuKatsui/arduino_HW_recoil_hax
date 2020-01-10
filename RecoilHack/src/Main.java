@@ -56,6 +56,7 @@ public class Main implements NativeMouseInputListener {
 		    }
 		    // ボーレート
 		    serialPort.setBaudRate(9600);
+		    serialPort.openPort();
 	  }
 
 
