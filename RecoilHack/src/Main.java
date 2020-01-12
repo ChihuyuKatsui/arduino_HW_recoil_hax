@@ -1,5 +1,3 @@
-import java.util.logging.LogManager;
-
 import org.jnativehook.GlobalScreen;
 import org.jnativehook.NativeHookException;
 import org.jnativehook.mouse.NativeMouseEvent;
@@ -7,28 +5,40 @@ import org.jnativehook.mouse.NativeMouseInputListener;
 
 import com.fazecast.jSerialComm.SerialPort;
 
-
 public class Main implements NativeMouseInputListener {
-	public void nativeMouseClicked(NativeMouseEvent e) {
-		System.out.println("Mouse Clicked: " + e.getClickCount());
-	}
 
-	public void nativeMousePressed(NativeMouseEvent e) {
-		sendByte((byte) 97);
-		System.out.println("Mouse Clicked: " + e.getClickCount());
-	}
+	static boolean RMB;
+	static boolean LMB;
+	static boolean EMB;
+public void nativeMouseClicked(NativeMouseEvent e) {
+System.out.println("Mouse Clicked: " + e.getClickCount());
+}
 
-	public void nativeMouseReleased(NativeMouseEvent e) {
-		System.out.println("Mouse Released: " + e.getButton());
+public void nativeMousePressed(NativeMouseEvent e) {
+	if(e.getButton()==1) {
+		LMB=true;
+	}else {
+		RMB=true;
 	}
+	if(LMB&&RMB)System.out.println("かかかかっかか");
+}
 
-	public void nativeMouseMoved(NativeMouseEvent e) {
-		System.out.println("Mouse Moved: " + e.getX() + ", " + e.getY());
+public void nativeMouseReleased(NativeMouseEvent e) {
+	if(e.getButton()==1) {
+		LMB=false;
+	}else {
+		RMB=false;
 	}
+}
 
-	public void nativeMouseDragged(NativeMouseEvent e) {
-		System.out.println("Mouse Dragged: " + e.getX() + ", " + e.getY());
-	}
+public void nativeMouseMoved(NativeMouseEvent e) {
+System.out.println("Mouse Moved: " + e.getX() + ", " + e.getY());
+}
+
+public void nativeMouseDragged(NativeMouseEvent e) {
+System.out.println("Mouse Dragged: " + e.getX() + ", " + e.getY());
+}
+
 
 	SerialPort serialPort;
 	boolean portFound = false;
@@ -41,10 +51,6 @@ public class Main implements NativeMouseInputListener {
 
 	  void startSerial() {
 
-		    if (!portFound || serialPort != null) {
-		      return;
-		    }
-
 		    // ポート名
 		    String portName = "COM6";
 
@@ -55,30 +61,44 @@ public class Main implements NativeMouseInputListener {
 		      }
 		    }
 		    // ボーレート
-		    serialPort.setBaudRate(9600);
+		    //setComPortParameters​(9600, int newDataBits, int newStopBits, int newParity);
 		    serialPort.openPort();
 	  }
 
 
 
+
+
+
 	public static void main(String[] args) {
+		SerialPort comPort = SerialPort.getCommPorts()[1];
+		comPort.openPort();
+		System.out.println(comPort.getSystemPortName());
+		comPort.setComPortTimeouts(SerialPort.TIMEOUT_READ_SEMI_BLOCKING, 100, 0);
+		      byte[] B0 = {100};
+		      comPort.writeBytes(B0,1);
+		      System.out.println(B0[0]);
+		      byte[] B1 = {111};
+		      comPort.writeBytes(B1,1);
+		      System.out.println(B1[0]);
+
 		try {
 			GlobalScreen.registerNativeHook();
-			LogManager.getLogManager().reset();
-		}
-		catch (NativeHookException ex) {
+		}catch (NativeHookException ex) {
 			System.err.println("There was a problem registering the native hook.");
 			System.err.println(ex.getMessage());
-
 			System.exit(1);
 		}
 
-		// Construct the example object.
-		Main example = new Main();
-
-		// Add the appropriate listeners.
-		GlobalScreen.addNativeMouseListener(example);
-//		GlobalScreen.addNativeMouseMotionListener(example);
+			// Construct the example object.
+			System.out.println("aaaa");
+			Main example = new Main();
+			System.out.println("aaaa");
+			// Add the appropriate listeners.
+			GlobalScreen.addNativeMouseListener(example);
+			System.out.println("bbbb");
+			GlobalScreen.addNativeMouseMotionListener(example);
+			System.out.println("cccc");
 
 	}
 }
