@@ -101,10 +101,8 @@ public void nativeMouseDragged(NativeMouseEvent e) {
 					  while(true) {
 						  if(RMB&&LMB) {
 							  comPort.writeBytes(B0,1);
-							  System.out.println("aaaa");
 						  }else {
 							  comPort.writeBytes(B1,1);
-							  System.out.println("bbbb");
 						  }
 					  }
 				  }
