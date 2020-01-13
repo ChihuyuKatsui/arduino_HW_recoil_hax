@@ -43,42 +43,34 @@ public class Main extends Thread implements NativeMouseInputListener {
 	public void nativeMouseDragged(NativeMouseEvent e) {
 
 	}
+/////////----------↓↓ためし↓↓-------------/////////
+////	SerialPort serialPort;
+////	boolean portFound = false;
+//
+////	void sendByte(byte b) {
+////		byte[] buff = new byte[0];
+////		buff[0] = b;
+////		serialPort.writeBytes(buff, 1);
+////	}
+//
+////	void startSerial() {
+////		String portName = "COM6";
+////		for (SerialPort sp : SerialPort.getCommPorts()) {
+////			if (sp.getSystemPortName().equals(portName)) {
+////				serialPort = sp;
+////				break;
+////			}
+////		}
+////		serialPort.openPort();
+////	}
+/////////--------------ためし-------------/////////
 
-	SerialPort serialPort;
-	boolean portFound = false;
-
-	void sendByte(byte b) {
-		byte[] buff = new byte[0];
-		buff[0] = b;
-		serialPort.writeBytes(buff, 1);
-	}
-
-	void startSerial() {
-
-		// ポート名
-		String portName = "COM6";
-
-		for (SerialPort sp : SerialPort.getCommPorts()) {
-			if (sp.getSystemPortName().equals(portName)) {
-				serialPort = sp;
-				break;
-			}
-		}
-		// ボーレート
-		//setComPortParameters​(9600, int newDataBits, int newStopBits, int newParity);
-		serialPort.openPort();
-	}
 
 	public static void main(String[] args) {
 		SerialPort comPort = SerialPort.getCommPorts()[2];
 		comPort.openPort();
 		System.out.println(comPort.getSystemPortName());
 		comPort.setComPortTimeouts(SerialPort.TIMEOUT_READ_SEMI_BLOCKING, 100, 0);
-
-		comPort.writeBytes(B0, 1);
-		System.out.println(B0[0]);
-		comPort.writeBytes(B1, 1);
-		System.out.println(B1[0]);
 
 		try {
 			GlobalScreen.registerNativeHook();
@@ -89,8 +81,7 @@ public class Main extends Thread implements NativeMouseInputListener {
 		}
 
 		// Construct the example object.
-		//System.out.println("aaaa");
-		Main example = new Main() {
+		Main main = new Main() {
 			@Override
 			public void run() {
 				System.out.println(flag);
@@ -109,10 +100,10 @@ public class Main extends Thread implements NativeMouseInputListener {
 			}
 		};
 		LogManager.getLogManager().reset();
-		example.start();
+		main.start();
 
 		// Add the appropriate listeners.
-		GlobalScreen.addNativeMouseListener(example);
+		GlobalScreen.addNativeMouseListener(main);
 
 		//GlobalScreen.addNativeMouseMotionListener(example);
 		//System.out.println("cccc");
