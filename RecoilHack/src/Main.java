@@ -67,7 +67,7 @@ public class Main extends Thread implements NativeMouseInputListener {
 
 
 	public static void main(String[] args) {
-		SerialPort comPort = SerialPort.getCommPorts()[2];
+		SerialPort comPort = SerialPort.getCommPorts()[1];
 		comPort.openPort();
 		System.out.println(comPort.getSystemPortName());
 		comPort.setComPortTimeouts(SerialPort.TIMEOUT_READ_SEMI_BLOCKING, 100, 0);
@@ -92,6 +92,10 @@ public class Main extends Thread implements NativeMouseInputListener {
 						flag = true;
 						System.out.println(flag);
 					}else if (!LMB &&flag) {
+						comPort.writeBytes(B1, 1);
+						flag = false;
+						System.out.println(flag);
+					}else if (!RMB &&flag) {
 						comPort.writeBytes(B1, 1);
 						flag = false;
 						System.out.println(flag);
