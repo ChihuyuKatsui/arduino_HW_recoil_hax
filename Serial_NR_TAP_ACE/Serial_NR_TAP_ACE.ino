@@ -21,55 +21,54 @@ void setup() {
   digitalWrite(PIN_LED, LOW);
   Mouse.begin();
   Serial.begin(9600);
+  delay(3000);
   Serial.print(d);
 }
 
 void loop() {
-    if (digitalRead(buttonPin)== LOW){
-      tappu();
-    }else{
+  i=0;
+  if(Serial.read() == 100){
       buppa();
-    }
+  }else if (digitalRead(buttonPin)== LOW){
+      tappu();
+  }
 }
 
 
 void buppa(){
-  i = 0;
-  if(Serial.read() == 100&&!flag){
-    while (true) {
+  while(true){
+    time = millis();
+    while (millis() - time < d/2) {}  //１発目が出る
+    Mouse.move(yoko[i], tate[i]);
+    while (millis() - time < d) {}
+    flag=false;
+    if (i == (sizeof(tate)/sizeof(int)) - 1) {
       time = millis();
-      while (millis() - time < d/2) {}  //１発目が出る
-      Mouse.move(yoko[i], tate[i]);
-      while (millis() - time < d) {}
-      i++;
-      if (i == (sizeof(tate)/sizeof(int)) - 1) {
-        time = millis();
-        while (millis() - time < 1000) {}
-        break;
-      } else if(Serial.read() == 111){
-        Mouse.move(-yoko[i], -tate[i]);
-        break;
-      }
+      while (millis() - time < 1000) {}
+      break;
+    }else if(Serial.read() == 111&&!flag){
+      Mouse.move(-yoko[i], -tate[i]);
+      break;
     }
+    i++;
   }
-  flag=false;
 }
 
 void tappu() {
   // デバウンス時間待機しても同じ状態ならスイッチ操作とみなす
   Mouse.press();
   time = millis();
-  while (millis() - time < 45) {}  //１発目が出る
-  Mouse.move(0,15);  //２発目に備えてリコイル制御
+  while (millis() - time < 50) {}  //１発目が出る
+  Mouse.move(yoko[0], tate[0]);  //２発目に備えてリコイル制御
   while (millis() - time < d) {}
   
   time = millis();
   while (millis() - time < d/2){}
-  Mouse.move(-1,12);   //３発目に備えてリコイル制御
+  Mouse.move(yoko[1], tate[1]);   //３発目に備えてリコイル制御
   while (millis() - time < d) {}  //２発目が出る
   
   time = millis();
-  while (millis() - time < d-45) {}  //２発目と同じ、３発目が出る
+  while (millis() - time < d-50) {}  //２発目と同じ、３発目が出る
   Mouse.release();
   while (millis() - time < d) {}
   
