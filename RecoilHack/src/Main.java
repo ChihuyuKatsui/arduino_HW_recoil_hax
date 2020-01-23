@@ -6,8 +6,11 @@ import org.jnativehook.mouse.NativeMouseEvent;
 import org.jnativehook.mouse.NativeMouseInputListener;
 
 import com.fazecast.jSerialComm.SerialPort;
+import com.fazecast.jSerialComm.SerialPortEvent;
+import com.fazecast.jSerialComm.SerialPortMessageListener;
 
-public class Main extends Thread implements NativeMouseInputListener {
+public class Main extends Thread implements NativeMouseInputListener, SerialPortMessageListener{
+
 
 	static boolean RMB;
 	static boolean LMB;
@@ -15,11 +18,14 @@ public class Main extends Thread implements NativeMouseInputListener {
 	static boolean flag = false;
 	static byte[] B0 = { 100 };
 	static byte[] B1 = { 111 };
+	static byte[] newData= {1};
 
+	@Override
 	public void nativeMouseClicked(NativeMouseEvent e) {
 
 	}
 
+	@Override
 	public void nativeMousePressed(NativeMouseEvent e) {
 		if (e.getButton() == 1) {
 			LMB = true;
@@ -28,6 +34,7 @@ public class Main extends Thread implements NativeMouseInputListener {
 		}
 	}
 
+	@Override
 	public void nativeMouseReleased(NativeMouseEvent e) {
 		if (e.getButton() == 1) {
 			LMB = false;
@@ -36,13 +43,43 @@ public class Main extends Thread implements NativeMouseInputListener {
 		}
 	}
 
+	@Override
 	public void nativeMouseMoved(NativeMouseEvent e) {
 
 	}
 
+	@Override
 	public void nativeMouseDragged(NativeMouseEvent e) {
 
 	}
+
+
+	@Override
+	public int getListeningEvents() {
+		// TODO 自動生成されたメソッド・スタブ
+		return 0;
+	}
+
+	@Override
+	public void serialEvent(SerialPortEvent event) {
+		// TODO 自動生成されたメソッド・スタブ
+
+	}
+
+	@Override
+	public boolean delimiterIndicatesEndOfMessage() {
+		// TODO 自動生成されたメソッド・スタブ
+		return false;
+	}
+
+	@Override
+	public byte[] getMessageDelimiter() {
+		// TODO 自動生成されたメソッド・スタブ
+		return null;
+	}
+
+
+
 /////////----------↓↓ためし↓↓-------------/////////
 ////	SerialPort serialPort;
 ////	boolean portFound = false;
@@ -86,6 +123,7 @@ public class Main extends Thread implements NativeMouseInputListener {
 			public void run() {
 				System.out.println(flag);
 				while (true) {
+					//while(newData[0]==-1){}
 					System.out.print("");
 					if (RMB && LMB&&!flag) {
 						comPort.writeBytes(B0, 1);
@@ -110,7 +148,35 @@ public class Main extends Thread implements NativeMouseInputListener {
 		GlobalScreen.addNativeMouseListener(main);
 
 		//GlobalScreen.addNativeMouseMotionListener(example);
-		//System.out.println("cccc");
+//		comPort.addDataListener(new SerialPortDataListener() {
+//			@Override
+//			public int getListeningEvents() { return SerialPort.LISTENING_EVENT_DATA_RECEIVED; }
+//			@Override
+//			public void serialEvent(SerialPortEvent event){
+//				newData = event.getReceivedData();
+//				System.out.println("Received data of size: " + newData.length);
+//				System.out.print(newData[0]);
+//				if(newData[0]==-1) {
+////					try {
+////						Thread.sleep(50);
+////					} catch (InterruptedException e) {
+////						e.printStackTrace();
+////					}
+//					comPort.closePort();
+//					try {
+//						Thread.sleep(11000);
+//					} catch (InterruptedException e) {
+//					e.printStackTrace();
+//					}
+//					System.out.print(SerialPort.getCommPorts()[1]);
+//					comPort.openPort();
+//				}
+//			}
+//		});
+
+
 
 	}
+
+
 }
