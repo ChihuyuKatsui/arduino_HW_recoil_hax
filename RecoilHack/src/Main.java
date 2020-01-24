@@ -19,6 +19,7 @@ public class Main extends Thread implements NativeMouseInputListener, SerialPort
 	static byte[] B0 = { 100 };
 	static byte[] B1 = { 111 };
 	static byte[] newData= {1};
+	static byte[] opf= {11};
 
 	@Override
 	public void nativeMouseClicked(NativeMouseEvent e) {
@@ -123,7 +124,14 @@ public class Main extends Thread implements NativeMouseInputListener, SerialPort
 			public void run() {
 				System.out.println(flag);
 				while (true) {
-					//while(newData[0]==-1){}
+					//if(newData[0]==-1){
+					//	comPort.closeport();
+					//	Thread.sleep(1000);
+//						System.out.print(SerialPort.getCommPorts()[1]);
+//						SerialPort comPort = SerialPort.getCommPorts()[1];
+//						comPort.openPort();
+//						comPort.writeBytes(opf, 1);
+					//}
 					System.out.print("");
 					if (RMB && LMB&&!flag) {
 						comPort.writeBytes(B0, 1);
